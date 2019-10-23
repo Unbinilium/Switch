@@ -65,7 +65,6 @@ $Net_Adapter_TMP = [System.IO.Path]::GetTempFileName()
 Get-NetAdapter | Select-Object -Property "ifIndex" | Format-Table -AutoSize | Out-File -FilePath "$Net_Adapter_TMP"
 $Net_Adapter_Index = (Get-Content -Path "$Net_Adapter_TMP") -creplace "ifIndex", "" -creplace "-", "" | ForEach-Object {$_.Trim()} | Where-Object { $_ } | Sort-Object
 
-
 #Execute DNS change for each Network Adapter
 foreach ($Net_Adapter in $Net_Adapter_Index) {
     Set-DnsClientServerAddress -InterfaceIndex "$Net_Adapter" -ServerAddresses ($DNS_Server) -Validate
