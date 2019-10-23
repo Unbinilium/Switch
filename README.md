@@ -10,7 +10,7 @@
 - Windows 10 1709 Professional with PowerShell 3.0 Later
 
 ## Notice
-- Still in developing and there might be a lots of bugs
+- Still in development and there might be a lots of bugs
 - Only IPv4 DNS Address family supported, IPv6 and DNS over TLS/HTTPS support in the future
 
 ## Start
