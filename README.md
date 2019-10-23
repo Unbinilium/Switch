@@ -14,7 +14,10 @@
 - Only IPv4 DNS Address family supported, IPv6 and DNS over TLS/HTTPS support in the future
 
 ## Start
-Please **Download Switch** directly to your PC and run using PowerShell by Administrator, follow the steps displayed on the screen.
+Please **Download Switch** for the link below directly to your PC and run using PowerShell by Administrator, follow the steps displayed on the screen.
+```
+https://raw.githubusercontent.com/Unbinilium/Switch/master/switch.ps1
+```
 
 ## Author & Acknowledge
 <a href="https://github.com/Unbinilium" target="_blank">Unbinilium</a>
