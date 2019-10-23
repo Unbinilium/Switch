@@ -20,4 +20,4 @@ https://raw.githubusercontent.com/Unbinilium/Switch/master/switch.ps1
 ```
 
 ## Author & Acknowledge
-<a href="https://github.com/Unbinilium" target="_blank">Unbinilium</a>
+Switch DNS Modifier Written by <a href="https://github.com/Unbinilium" target="_blank">Unbinilium</a>
