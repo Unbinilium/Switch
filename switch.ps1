@@ -1,4 +1,4 @@
-#Switch v0.5 written by Unbinilium
+#Switch v0.5.1 written by Unbinilium
 
 #Check if Administrator
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
@@ -63,7 +63,7 @@ foreach ($DNS in $DNS_Provider.Split(" ")) {
         Out-File -FilePath "$DNS_Server_TMP" -InputObject "$DNS_Address," -Append -NoNewline
     }
 }
- $DNS_Server = (Get-Content -Path "$DNS_Server_TMP" -Raw).TrimEnd(',')
+$DNS_Server = (Get-Content -Path "$DNS_Server_TMP" -Raw).TrimEnd(',')
 
 #Generate Network Adapter TMP Path and extract Net Adapter Index as table
 $Net_Adapter_TMP = [System.IO.Path]::GetTempFileName() | Rename-Item -NewName { $_ -replace 'tmp', 'NetAdapter' } -PassThru
@@ -73,13 +73,15 @@ $Net_Adapter_Index = (Get-Content -Path "$Net_Adapter_TMP") -creplace "ifIndex",
 #Execute DNS change for each Network Adapter
 $Execute_DNS_TMP = [System.IO.Path]::GetTempFileName() | Rename-Item -NewName { $_ -replace 'tmp', 'ps1' } -PassThru
 if ($DNS_Provider | Select-String -Pattern 'Default') {
+    foreach ($Net_Adapter in $Net_Adapter_Index) {
         Set-DnsClientServerAddress -InterfaceIndex "$Net_Adapter" -ResetServerAddresses
-    } else {
-        foreach ($Net_Adapter in $Net_Adapter_Index) {
-            Out-File -FilePath "$Execute_DNS_TMP" -InputObject "Set-DnsClientServerAddress -InterfaceIndex `"$Net_Adapter`" -ServerAddresses ($DNS_Server)" -Append
-        }
-        powershell $Execute_DNS_TMP
-        Remove-Item -Path "$Execute_DNS_TMP"
+    }
+} else {
+    foreach ($Net_Adapter in $Net_Adapter_Index) {
+        Out-File -FilePath "$Execute_DNS_TMP" -InputObject "Set-DnsClientServerAddress -InterfaceIndex `"$Net_Adapter`" -ServerAddresses ($DNS_Server)" -Append
+    }
+    powershell $Execute_DNS_TMP
+    Remove-Item -Path "$Execute_DNS_TMP"
 }
 
 #Clean up TEMP
