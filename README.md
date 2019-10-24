@@ -1,7 +1,7 @@
 ## A light PowerShell script for you to change DNS on Windows
 
 ## Switch Features
-- **Automatically** choose DNS and sort DNS by latency
+- **Automatically** choose DNS and sort DNS by latency *(In Development)*
 - **Set DNS by Well-Known DNS providers** by just entering their names
 - **Set custom DNS manually** by entering its IP Addresses
 - Fully **written in PowerShell** and no other dependencies required
@@ -12,6 +12,7 @@
 ## Notice
 - Only IPv4 DNS address family supported, using IPv6 or DNS over TLS/HTTPS may cause error
 - Do not input same DNS provider and custom DNS to avoid use one DNS repeatedly
+- Custom DNS IP address must follow the general REGX `0.0.0.0-255.255.255.255`
 - TEMP file geneated in `~\AppData\Local\Temp\tmp*.tmp` and cleaned up after the operation
 - DNS providers number is limited, enter too many would cause error
 - Using flexible words matching, make sure DNS provider you entered is standalone to avoid cause error
@@ -24,11 +25,11 @@ https://raw.githubusercontent.com/Unbinilium/Switch/master/switch.ps1
 ```
 
 ## Useage
-When specializing the DNS provider, you can input mutiple DNS provider's name **spilted by space ' '**, like the example below:
+When specializing the DNS provider, you can input mutiple DNS provider's name **spilted by space** ` `, like the example below:
 ```
 Google Cloudflare
 ```
-Also it matches with **no case sensitive** so it's normally ok to input like this(That's not always stable, please review notice):
+Also it matches with **no case sensitive** so it's normally ok to input like the code below, It **not always stable**, please review **Notice**.
 ```
 gOoGle ClOuDflAre
 gOoGLe 1.1.
@@ -38,7 +39,7 @@ You can input `Custom` as a provider that allows you to set some **customized** 
 ```
 gOoGle Custom
 ```
-**Custom DNS server address should be formatted**, when input multiple address they shoud be divided by ',' like this:
+**Custom DNS server address should be formatted**, when input multiple address they shoud be divided by comma `,` like this:
 ```
 9.9.9.9,117.50.22.22
 ```
