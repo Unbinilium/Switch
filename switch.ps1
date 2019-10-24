@@ -1,4 +1,4 @@
-#Switch DNS Modifier v0.5.3 Written by Unbinilium https://unbinilium.github.io/Switch/
+#Switch DNS Modifier v0.6 Written by Unbinilium https://unbinilium.github.io/Switch/
 $ErrorActionPreference = "Continue"
 
 #Check if Administrator
@@ -75,9 +75,7 @@ Remove-Item -Path "$DNS_Provider_Name_TMP"
 Remove-Item -Path "$DNS_Server_TMP"
 Remove-Item -Path "$Net_Adapter_TMP"
 
-#Show Results
-Get-DnsClientServerAddress
-
-#Press Enter to exit
-Read-Host -Prompt 'DNS Change Execution Finished, Please Press Enter to Exit'
+#Press AnyKey to Exit
+Write-Host -NoNewline -ForegroundColor Gray "DNS Change Execution Finished, Please Press AnyKey to Exit..."
+Write-Host -NoNewline -Object ('' -f [System.Console]::ReadKey().Key.ToString())
 exit
