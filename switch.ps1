@@ -1,4 +1,4 @@
-#Switch v0.3 written by Unbinilium
+#Switch v0.3.1 written by Unbinilium
 
 #Check if Administrator
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
@@ -57,10 +57,7 @@ foreach ($DNS in $DNS_Provider.Split(" ")) {
     if ($DNS | Select-String -Pattern 'Custom') { 
         $Custom_DNS_Address = Read-Host -Prompt 'Please Enter Custome DNS Address (Use "," to spilt)'
         $Custom_DNS_Address = $Custom_DNS_Address.replace(',','","')
-        Out-File -FilePath "$DNS_Server_TMP" -InputObject '"' -Append -NoNewline
-        Out-File -FilePath "$DNS_Server_TMP" -InputObject "$Custom_DNS_Address" -Append -NoNewline
-        Out-File -FilePath "$DNS_Server_TMP" -InputObject '",' -Append -NoNewline
-        
+        Out-File -FilePath "$DNS_Server_TMP" -InputObject "`"$Custom_DNS_Address`"," -Append -NoNewline
     } else {
         $DNS_Address = (Select-String -Path $DNS_List_TMP -Pattern "$DNS") -split "/" | Select-Object -Skip 1 -First 1
         Out-File -FilePath "$DNS_Server_TMP" -InputObject "$DNS_Address," -Append -NoNewline
@@ -72,7 +69,6 @@ $DNS_Server = (Get-Content -Path "$DNS_Server_TMP").TrimEnd(',')
 $Net_Adapter_TMP = [System.IO.Path]::GetTempFileName()
 Get-NetAdapter | Select-Object -Property "ifIndex" | Format-Table -AutoSize | Out-File -FilePath "$Net_Adapter_TMP"
 $Net_Adapter_Index = (Get-Content -Path "$Net_Adapter_TMP") -creplace "ifIndex", "" -creplace "-", "" | ForEach-Object {$_.Trim()} | Where-Object { $_ } | Sort-Object
-
 
 #Execute DNS change for each Network Adapter
 foreach ($Net_Adapter in $Net_Adapter_Index) {
