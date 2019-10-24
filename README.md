@@ -11,7 +11,11 @@
 
 ## Notice
 - Only IPv4 DNS address family supported, using IPv6 or DNS over TLS/HTTPS may cause error
+- Do not input same DNS provider and custom DNS to avoid use one DNS repeatedly
 - TEMP file geneated in `~\AppData\Local\Temp\tmp*.tmp` and cleaned up after the operation
+- DNS providers number is limited, enter too many would cause error
+- Using flexible words match so that make sure DNS provider you entered is standalone to avoid cause error
+- Modifying DNS provider also requires each record is standalone
 
 ## Start
 Please **Download Switch** from the link below directly to your PC and **run Switch using PowerShell by Administrator**, follow the steps displayed on the screen.
@@ -24,13 +28,15 @@ When specializing the DNS provider, you can input mutiple DNS provider's name **
 ```
 Google Cloudflare
 ```
-Also it matches with **no case sensitive** so it's ok to input like this:
+Also it matches with **no case sensitive** so it's normally ok to input like this(That's not always stable, please review notice):
 ```
 gOoGle ClOuDflAre
+gOoGLe 1.1.
+Goog 1.0
 ```
-You can input `Custom` as a provider that allows you to set some **customized** DNS servers, you can **only type** `custom` in DNS providers to use the DNS server only your specialized, or example below means **append** your custom DNS server to DNS provider `Google`:
+You can input `Custom` as a provider that allows you to set some **customized** DNS servers, you can **only type** `Custom` in DNS providers to use the DNS server only your specialized, or example below means **append** your custom DNS server to DNS provider `Google`:
 ```
-gOoGle custom
+gOoGle Custom
 ```
 **Custom DNS server address should be formatted**, when input multiple address they shoud be divided by ',' like this:
 ```
