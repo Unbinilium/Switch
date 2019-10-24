@@ -14,7 +14,7 @@
 - Do not input same DNS provider and custom DNS to avoid use one DNS repeatedly
 - TEMP file geneated in `~\AppData\Local\Temp\tmp*.tmp` and cleaned up after the operation
 - DNS providers number is limited, enter too many would cause error
-- Using flexible words match so that make sure DNS provider you entered is standalone to avoid cause error
+- Using flexible words matching, make sure DNS provider you entered is standalone to avoid cause error
 - Modifying DNS provider also requires each record is standalone
 
 ## Start
