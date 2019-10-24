@@ -32,11 +32,12 @@ You can input `Custom` as a provider that allows you to set some **customized** 
 ```
 gOoGle custom
 ```
-Custom DNS server address should be formatted, when input multiple address they shoud be divided by ',' like this:
+**Custom DNS server address should be formatted**, when input multiple address they shoud be divided by ',' like this:
 ```
 9.9.9.9,117.50.22.22
 ```
 If you want to **restore the DNS settings to default** or just use the DNS server form DHCP broadcast, you can type `Default` in DNS providers.
+
 **Modifying DNS provider is not recommended**, it stored with **Base64 encoded** with encoding `UTF-8 CRLF` in the variable named `$DNS_List`. The decoded Base64 will be like this following the **structure** `#DNS provider's name/"DNS provider's address1","DNS provider's address2"`:
 ```
 #114DNS/"114.114.114.114","114.114.115.115"
