@@ -49,7 +49,7 @@ foreach($DNS_Provider_Name in Get-Content -Path "$DNS_List_TMP") {
 }
 $DNS_Provider_Name = (Get-Content -Path "$DNS_Provider_Name_TMP").substring(2)
 Write-Host -Object "$DNS_Provider_Name"
-$DNS_Provider = Read-Host -Prompt 'Please Enter DNS Provider name to process (Use " " to spilt)'
+$DNS_Provider = Read-Host -Prompt 'Please Enter DNS Provider Name to Process (Use " " to spilt)'
 
 #Extract DNS Server from DNS List TMP
 $DNS_Server_TMP = [System.IO.Path]::GetTempFileName() | Rename-Item -NewName { $_ -replace 'tmp', 'DNSServer' } -PassThru
