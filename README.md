@@ -59,7 +59,7 @@ If you want to **restore the DNS settings to default** or just use the DNS serve
 #Custom/
 #Default/
 ```
-The opration custom and restore to default are generally defined in the end of this file.
+The opration *custom* and *restore to default* are generally defined in the end of this file.
 
 ## Author & Acknowledge
-Switch DNS Modifier Written by <a href="https://github.com/Unbinilium" target="_blank">Unbinilium</a>
+Switch DNS Modifier Written by <a href="https://github.com/Unbinilium" target="_blank">Unbinilium</a> using open source project <a href="https://github.com/PowerShell/PowerShell" target="_blank">PowerShell</a>.
