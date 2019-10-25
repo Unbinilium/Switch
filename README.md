@@ -1,15 +1,16 @@
 ## A light PowerShell script for you to change DNS on Windows
 
 ## Switch Features
-- **Automatically** choose DNS and sort DNS by latency *(In Development)*
-- **Set DNS by Well-Known DNS providers** by just entering their names
-- **Set custom DNS manually** by entering its IP Addresses
+- **Set multiple DNS servers** directly with concurrent requests enabled
+- **Set DNS by Well-Known DNS providers** by just entering provider's names
+- **Set custom DNS manually** by entering its IP addresses and restore to default easily
 - Fully **written in PowerShell** and no other dependencies required
 
 ## System Requirements
-- Windows 10 1709 Professional with PowerShell 3.0 Later
+- Windows 10 1709 Professional with PowerShell 5.1 Later
 
 ## Notice
+- Administrator permission required by `Set-DnsClientServerAddress`
 - Only IPv4 DNS address family supported, using IPv6 or DNS over TLS/HTTPS may cause error
 - Do not input same DNS provider and custom DNS to avoid use one DNS repeatedly
 - Custom DNS IP address must follow the general REGX `0.0.0.0-255.255.255.255`
@@ -20,7 +21,7 @@
 - Modifying DNS provider also requires each record is standalone
 
 ## Start
-Please **Download Switch** from the link below directly to your PC and **run Switch using PowerShell by Administrator**, follow the steps displayed on the screen.
+Please **Download Switch** from the link below directly to your PC and **run Switch using PowerShell by Administrator** by clicking `Run with PowerShell` in **menu list**, follow the notices displayed on the screen.
 ```
 https://raw.githubusercontent.com/Unbinilium/Switch/master/switch.ps1
 ```
