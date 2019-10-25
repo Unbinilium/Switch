@@ -1,4 +1,4 @@
-#Switch DNS Modifier v0.6.5 Written by Unbinilium https://unbinilium.github.io/Switch/
+#Switch DNS Modifier v0.7 Written by Unbinilium https://unbinilium.github.io/Switch/
 $ErrorActionPreference = "Continue"
 
 #Check if Administrator
@@ -12,27 +12,32 @@ $Start_Up = "V3JpdGUtSG9zdCAtRm9yZWdyb3VuZENvbG9yIEdyYXkgIi0tLS0tLS0tLS0tLS0tLS0
 
 #Display Start Up
 $Start_Up_TMP = [System.IO.Path]::GetTempFileName() | Rename-Item -NewName { $_ -replace 'tmp', 'StartUp.ps1' } -PassThru
-[System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String($Start_Up)) | Out-File -FilePath "$Start_Up_TMP"
+[System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String($Start_Up)) | Out-File -FilePath "$Start_Up_TMP" -Force
 powershell "$Start_Up_TMP"
-Remove-Item -Path "$Start_Up_TMP"
+Remove-Item -Path "$Start_Up_TMP" -Force
 
 #DNS List with Base64 Encoded
 $DNS_List = "IzExNEROUy8iMTE0LjExNC4xMTQuMTE0IiwiMTE0LjExNC4xMTUuMTE1Ig0KI0dvb2dsZS8iOC44LjguOCIsIjguOC40LjQiDQojQ2xvdWRmbGFyZS8iMS4xLjEuMSIsIjEuMC4wLjEiDQojQWxpeXVuLyIyMjMuNS41LjUiLCIyMjMuNi42LjYiDQojQ05OSUMvIjEuMi40LjgiLCIyMTAuMi40LjgiDQojQmFpZHUvIjE4MC43Ni43Ni43NiINCiNEbnNwb2QvIjExOS4yOS4yOS4yOSIsIjE4Mi4yNTQuMTE2LjExNiINCiNPcGVuRE5TLyIyMDguNjcuMjIyLjIyMiIsIjIwOC42Ny4yMjAuMjIwIg0KI01pY3Jvc29mdC8iNC4yLjIuMSIsIjQuMi4yLjIiDQojQ3VzdG9tLw0KI0RlZmF1bHQv"
 
 #Generate DNS List TMP Path and Decode DNS List
 $DNS_List_TMP = [System.IO.Path]::GetTempFileName() | Rename-Item -NewName { $_ -replace 'tmp', 'DnsList' } -PassThru
-[System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String($DNS_List)) | Out-File -FilePath "$DNS_List_TMP"
+[System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String($DNS_List)) | Out-File -FilePath "$DNS_List_TMP" -Force
 
 #Specialize DNS Provider
 Write-Host "Supported DNS Providers:"
 $DNS_Provider_Name_TMP = [System.IO.Path]::GetTempFileName() | Rename-Item -NewName { $_ -replace 'tmp', 'DNSProviderName' } -PassThru
 foreach($DNS_Provider_Name in Get-Content -Path "$DNS_List_TMP") {
    $DNS_Provider_Name = (($DNS_Provider_Name) -split "/" | Select-Object -First 1).replace('#',', ')
-   Out-File -FilePath "$DNS_Provider_Name_TMP" -InputObject "$DNS_Provider_Name" -Append -NoNewline
+   Out-File -FilePath "$DNS_Provider_Name_TMP" -InputObject "$DNS_Provider_Name" -Append -Force -NoNewline
 }
+
 $DNS_Provider_Name = (Get-Content -Path "$DNS_Provider_Name_TMP").substring(2)
 Write-Host -ForegroundColor Gray -Object "$DNS_Provider_Name"
 $DNS_Provider = Read-Host -Prompt 'Please Enter DNS Provider Name to Process (Use " " to spilt)'
+if (!$DNS_Provider) {
+    Remove-Item -Path "$DNS_Provider_Name_TMP" -Force
+    exit
+}
 
 #Extract DNS Server from DNS List TMP
 $DNS_Server_TMP = [System.IO.Path]::GetTempFileName() | Rename-Item -NewName { $_ -replace 'tmp', 'DNSServer' } -PassThru
@@ -40,18 +45,24 @@ foreach ($DNS in $DNS_Provider.Split(" ")) {
     if ($DNS | Select-String -Pattern 'Custom') { 
         $Custom_DNS_Address = Read-Host -Prompt 'Please Enter Custome DNS Address (Use "," to spilt)'
         $Custom_DNS_Address = $Custom_DNS_Address.replace(',','","')
-        Out-File -FilePath "$DNS_Server_TMP" -InputObject "`"$Custom_DNS_Address`"," -Append -NoNewline
+        Out-File -FilePath "$DNS_Server_TMP" -InputObject "`"$Custom_DNS_Address`"," -Append -Force -NoNewline
     }
     else {
         $DNS_Address = (Select-String -Path $DNS_List_TMP -Pattern "$DNS") -split "/" | Select-Object -Skip 1 -First 1
-        Out-File -FilePath "$DNS_Server_TMP" -InputObject "$DNS_Address," -Append -NoNewline
+        if ((!$DNS_Address) -and ($DNS_Provider | Select-String -Pattern 'Default' -NotMatch)) {
+            Remove-Item -Path "$DNS_Provider_Name_TMP" -Force
+            Write-Host -NoNewline -ForegroundColor Gray "Contains Unknown DNS Provider or Operation, Please Press AnyKey to Abort..."
+            [System.Console]::ReadKey().Key.ToString()
+            exit
+        }
+        Out-File -FilePath "$DNS_Server_TMP" -InputObject "$DNS_Address," -Append -Force -NoNewline
     }
 }
 $DNS_Server = (Get-Content -Path "$DNS_Server_TMP" -Raw).TrimEnd(',')
 
 #Generate Network Adapter TMP Path and Extract Net Adapter Index as table
 $Net_Adapter_TMP = [System.IO.Path]::GetTempFileName() | Rename-Item -NewName { $_ -replace 'tmp', 'NetAdapter' } -PassThru
-Get-NetAdapter | Select-Object -Property "ifIndex" | Format-Table -AutoSize | Out-File -FilePath "$Net_Adapter_TMP"
+Get-NetAdapter | Select-Object -Property "ifIndex" | Format-Table -AutoSize | Out-File -FilePath "$Net_Adapter_TMP" -Force
 $Net_Adapter_Index = (Get-Content -Path "$Net_Adapter_TMP") -creplace "ifIndex", "" -creplace "-", "" | ForEach-Object {$_.Trim()} | Where-Object { $_ } | Sort-Object
 
 #Execute DNS change for each Network Adapter
@@ -63,17 +74,17 @@ if ($DNS_Provider | Select-String -Pattern 'Default') {
 }
 else {
     foreach ($Net_Adapter in $Net_Adapter_Index) {
-        Out-File -FilePath "$Execute_DNS_TMP" -InputObject "Set-DnsClientServerAddress -InterfaceIndex `"$Net_Adapter`" -ServerAddresses ($DNS_Server)" -Append
+        Out-File -FilePath "$Execute_DNS_TMP" -Force -InputObject "Set-DnsClientServerAddress -InterfaceIndex `"$Net_Adapter`" -ServerAddresses ($DNS_Server)" -Append
     }
     powershell "$Execute_DNS_TMP"
-    Remove-Item -Path "$Execute_DNS_TMP"
+    Remove-Item -Path "$Execute_DNS_TMP" -Force
 }
 
-#Clean up TEMP
-Remove-Item -Path "$DNS_List_TMP"
-Remove-Item -Path "$DNS_Provider_Name_TMP"
-Remove-Item -Path "$DNS_Server_TMP"
-Remove-Item -Path "$Net_Adapter_TMP"
+#Clean Up TEMP
+Remove-Item -Path "$DNS_List_TMP" -Force
+Remove-Item -Path "$DNS_Provider_Name_TMP" -Force
+Remove-Item -Path "$DNS_Server_TMP" -Force
+Remove-Item -Path "$Net_Adapter_TMP" -Force
 
 #Press AnyKey to Exit
 Write-Host -NoNewline -ForegroundColor Gray "DNS Change Execution Finished, Please Press AnyKey to Exit..."
