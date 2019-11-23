@@ -26,7 +26,7 @@ Please **Download Switch** from the link below directly to your PC and **run Swi
 https://raw.githubusercontent.com/Unbinilium/Switch/master/switch.ps1
 ```
 
-## Useage
+## Usage
 When specializing the DNS provider, you can input mutiple DNS provider's name **spilted by space** ` `, like the example below:
 ```
 Google Cloudflare
